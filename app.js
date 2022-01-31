@@ -6,12 +6,11 @@ const path = require("path")
 const app = express();
 const port = process.env.port || '8000'
 
-app.use(express.static(path.join(__dirname, "client", "build")))
+// app.use(express.static(path.join(__dirname, "client", "build")))
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(express.json());
-app.use(cors());
 
 var dbLink = "mongodb+srv://aclproject:cCal3jzWrGwLPDNI@cluster0.vjex6.gcp.mongodb.net/CS-Thesis?retryWrites=true&w=majority";
 
@@ -21,7 +20,13 @@ mongoose.connect(dbLink, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const Thesis = require('./thesisSchema');
 
-app.get("/", async (req, res) => {
+
+// if (process.env.NODE_ENV === 'production') {
+app.use(express.static('client/build'));
+// }
+
+app.get("/api", async (req, res) => {
+    // console.log("Dsa")
     try {
         var data = await Thesis.find();
         // console.log(data[0])
@@ -39,8 +44,5 @@ app.get("/", async (req, res) => {
 });
 
 
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
-});
 
 app.listen(port, () => console.log(`app running on port ${port}`));

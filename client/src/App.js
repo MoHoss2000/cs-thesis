@@ -7,7 +7,7 @@ import DataTable from "./Table";
 
 const { TabPane } = Tabs;
 
-const backend = "http://192.168.1.3:8000/";
+// const backend = "http://192.168.1.3:8000/";
  
 const { useState, useEffect } = React;
 
@@ -63,8 +63,8 @@ const App = () => {
   const customFetch = async (params = {}) => {
     setIsLoading(true);
 
-    const response = await axios.get(backend);
-
+    const response = await axios.get('/api');
+    // console.log("RESPONSE" + response.data);
     setProjects(response.data);
     // getProfs();
     // getCosubs();
@@ -87,6 +87,10 @@ const App = () => {
   const idsToElements = (ids) => {
     var res = [];
 
+    if(!ids){
+      setUserList([]);
+      return;
+    }
     ids.forEach(id => {
       var x = projects.filter(project => project._id == id)
       res.push(x[0]);
